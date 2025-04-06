@@ -686,6 +686,10 @@ class HumanoidIm(humanoid_amp_task.HumanoidAMPTask):
                 self.extras['clean_actions'] = self.clean_actions.cpu().numpy()
                 self.extras['reset_buf'] = self.reset_buf.cpu().numpy()  # n
 
+                ##### added by zixuan #####
+
+
+                ##### added by zixuan #####
             
                 self.obs_buf_t = self.obs_buf.cpu().numpy() # update to next time step
 

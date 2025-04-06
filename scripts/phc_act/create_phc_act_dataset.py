@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset_path", type=str, default="data/amass/pkls/amass_isaac_run_upright_slim.pkl")
     parser.add_argument("--exp_name", type=str, default="phc_comp_3")
     parser.add_argument("--num_runs", type=int, default=10)
-    parser.add_argument("--action_noise_std", type=int, default=0.05)
+    parser.add_argument("--action_noise_std", type=float, default=0.05)
     args = parser.parse_args()
 
     add_action_noise = True

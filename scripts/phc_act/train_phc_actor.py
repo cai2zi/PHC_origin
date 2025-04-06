@@ -181,14 +181,15 @@ def train_model(model, device, criterion, optimizer, batch_size,
              
             outputs = model(batch_obs)
             loss = criterion(outputs, batch_actions)
-
+            if not wandb.run is None:
+                wandb.log({"batch_loss": loss.item()})
             # Backward pass and optimization
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
         if not wandb.run is None:
-            wandb.log({"loss": loss.item()})
+            wandb.log({"epoch_loss": loss.item()})
 
         pbar.set_description(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
             
@@ -210,18 +211,18 @@ def train(dataset_path, metadata_path, sample_pkl, output_path, ckpt_path="check
     save_frequency = 100
     learning_rate = 2e-5
 
-    # run = wandb.init(
-    #     # Set the project where this run will be logged
-    #     project="PHC_Act",
-    #     # Track hyperparameters and run metadata
-    #     config={
-    #         "learning_rate": learning_rate,
-    #         "hidden_size": units,
-    #         "batch_size": batch_size,
-    #         "num_epochs": num_epochs,
-    #         "dataset": dataset_path,
-    #     },
-    # )
+    run = wandb.init(
+        # Set the project where this run will be logged
+        project="PHC_Act",
+        # Track hyperparameters and run metadata
+        config={
+            "learning_rate": learning_rate,
+            "hidden_size": units,
+            "batch_size": batch_size,
+            "num_epochs": num_epochs,
+            "dataset": dataset_path,
+        },
+    )
     model = MLP(934, 69, units, "silu")
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -238,7 +239,7 @@ if __name__ == "__main__":
     parser.add_argument("--metadata_path", type=str, default="")
     parser.add_argument("--output_path", type=str, default="")
     parser.add_argument("--sample_pkl", type=bool, default=False)
-    parser.add_argument("--ckpt_path", type=str, default="01600.pth")
+    parser.add_argument("--ckpt_path", type=str, default="00100.pth")
     args = parser.parse_args()
     
     dataset_path = args.dataset_path
